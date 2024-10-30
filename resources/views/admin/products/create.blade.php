@@ -44,7 +44,8 @@
                                             <label for="description">Description</label>
                                             <textarea name="description" id="description" cols="30" rows="10" class="summernote" placeholder="Description"></textarea>
                                         </div>
-                                    </div>                                            
+                                    </div>
+                                                                                
                                 </div>
                             </div>	                                                                      
                         </div>
@@ -58,6 +59,7 @@
                                 </div>
                             </div>	                                                                      
                         </div>
+                        
                         <div id="product-gallery" class="d-flex">
                                                                                                  
                         </div>
@@ -187,6 +189,7 @@
                 </div>
             </div>
         </form>
+       
         <!-- /.card -->
     </section>
     <!-- /.content -->
@@ -318,21 +321,27 @@
                 img_path = response.path;
                 img_path_full = "{{ url('storage') }}/"+img_path;
                 var html = `
-                    <div class="col-md-3">
+                    <div class="col-md-3" id="dimg_${response.id}">
                         <input type="hidden" name="image_array[]" value="${response.id}">
                         <div class="card" style="">
                             <img class="card-img-top" src="${img_path_full}" alt="Card image cap">
                             <div class="card-body">
-                                <a href="#" class="btn btn-danger">Delete</a>
+                                <a href="javascript:void(0);" class="btn btn-danger" onclick=deleteImage(${response.id})>Delete</a>
                             </div>
                         </div>
                     </div> `;
 
                 $("#product-gallery").append(html);
             }
+        },
+        complete: function(file){
+            this.removeFile(file);
         }
     });
   
+    function deleteImage(id){
+        $("#dimg_"+id).remove();
+    }
 
 
 

@@ -12,17 +12,18 @@ use App\Models\TempImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Laravel\Facades\Image;
-
-
+use Spatie\FlareClient\View;
 
 class ProductController extends Controller
 {
     public function index(){
 
+        $data['products'] = Product::latest()->paginate(10);
+        return view('admin.products.list', $data);
     }
     //
     public function create(){
-       
+      
         $data = [];
         $data['categories'] = Category::orderBy('name', 'ASC')->get();
         $data['sub_categories'] = SubCategory::orderBy('name', 'ASC')->get();
@@ -34,9 +35,9 @@ class ProductController extends Controller
 
         $rules = [
             'title' => "required",
-            'slug' => "required|unique:Products",
+            'slug' => "required|unique:products",
             'price' => "required",
-            'sku' => "required|unique:Products",
+            'sku' => "required|unique:products",
             'track_qty' => "required|in:Yes,No",
             'category' => "required|numeric",
             'is_featured' => 'required|in:Yes,No'
@@ -68,31 +69,39 @@ class ProductController extends Controller
             
             $image_array = $request->image_array;
 
+            
             if(!empty($request->image_array)){
                 foreach ($request->image_array as $temp_img_id) {
                     $temp_img_obj = TempImage::find($temp_img_id);
                     $temp_image_url = $temp_img_obj->image_url;
                     $temp_image_name = $temp_img_obj->image_name;
-                   echo  $sourcePath = public_path().'/storage/images/products/'. $temp_image_name;
-                    $destinationPath = public_path().'/storage/images/products/large/'. $temp_image_name;
+                    $sourcePath = storage_path('/app/public/images/products/temp/'. $temp_image_name);
+                    $destinationPathLarge = storage_path('/app/public/images/products/large/'. $temp_image_name);
+                    $destinationPathSmall = storage_path('/app/public/images/products/small/'. $temp_image_name);
                   
                     $image = Image::read($sourcePath);
                     // Resize image
                     $image->resize(1400, null,function ($constraint) {
                         $constraint->aspectRatio();
-                    })->save($destinationPath);
+                    })->save($destinationPathLarge);
+
+                    $image = Image::read($sourcePath);
+                    // Resize image
+                    $image->resize(300, 300,function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($destinationPathSmall);
                    
                     
                    // Resize while maintaining aspect ratio
                    
                 
                     $productImage = new ProductImage;
-                    $productImage->image = $temp_image_url;
+                    $productImage->image = $temp_image_name;
                     $productImage->product_id = $inserted_id;
                     $productImage->save();
                 }
             }
-
+            
 
 
             $request->session()->flash('success', 'Product added successfully');
@@ -122,8 +131,17 @@ class ProductController extends Controller
 
             // Create the custom file name
             $customName = date('Y_m_d_h_i_s') . '.' . $extension;
-            $path = $request->file('image')->storeAs('images/products', $customName, 'public');
-
+            $path = $request->file('image')->storeAs('images/products/temp/', $customName, 'public');
+            
+            $sourcePath = storage_path('/app/public/images/products/temp/'. $customName);
+            $destinationPathLarge = storage_path('/app/public/images/products/temp/'. $customName);
+            
+            $image = Image::read($sourcePath);
+            // Resize image
+            $image->resize(300, 300,function ($constraint) {
+                $constraint->aspectRatio();
+            })->save($destinationPathLarge);
+           
             $tempImage = new TempImage;
             $tempImage->image_name =  $customName;
             $tempImage->image_url = $path;

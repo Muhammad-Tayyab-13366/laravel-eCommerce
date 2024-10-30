@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         // \App\Models\Category::factory(30)->create();
-        // SubCategory::factory(30)->create();
-        $this->call(BrandSeeder::class);
+        //SubCategory::factory(30)->create();
+        //$this->call(BrandSeeder::class);
     }
 }
