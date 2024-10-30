@@ -5,7 +5,7 @@
         <div class="container-fluid my-2">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Product</h1>
+                    <h1>Edit Product</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route('products.index') }}" class="btn btn-primary">Back</a>
@@ -28,21 +28,21 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="title">Title</label>
-                                            <input type="text" name="title" id="title" class="form-control" placeholder="Title">	
+                                            <input type="text" name="title" id="title" value="{{ $product->title }}" class="form-control" placeholder="Title">	
                                             <p class="custom_error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="slug">Slug</label>
-                                            <input type="text" name="slug" id="slug" class="form-control" placeholder="Slug">	
+                                            <input type="text" name="slug" id="slug" value="{{ $product->slug }}" class="form-control" placeholder="Slug">	
                                             <p class="custom_error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="description">Description</label>
-                                            <textarea name="description" id="description" cols="30" rows="10" class="summernote" placeholder="Description"></textarea>
+                                            <textarea name="description"  id="description" cols="30" rows="10" class="summernote" placeholder="Description">{{ $product->description }}</textarea>
                                         </div>
                                     </div>
                                                                                 
@@ -70,14 +70,14 @@
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="price">Price</label>
-                                            <input type="text" name="price" id="price" class="form-control" placeholder="Price">	
+                                            <input type="text" name="price" id="price" value="{{ $product->price }}" class="form-control" placeholder="Price">	
                                             <p class="custom_error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <label for="compare_price">Compare at Price</label>
-                                            <input type="text" name="compare_price" id="compare_price" class="form-control" placeholder="Compare Price">
+                                            <input type="text" name="compare_price" value="{{ $product->compare_price }}" id="compare_price" class="form-control" placeholder="Compare Price">
                                             <p class="text-muted mt-3">
                                                 To show a reduced price, move the product’s original price into Compare at price. Enter a lower value into Price.
                                             </p>	
@@ -93,27 +93,27 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="sku">SKU (Stock Keeping Unit)</label>
-                                            <input type="text" name="sku" id="sku" class="form-control" placeholder="sku">	
+                                            <input type="text" name="sku" id="sku"  value="{{ $product->sku }}" class="form-control" placeholder="sku">	
                                             <p class="custom_error"></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="barcode">Barcode</label>
-                                            <input type="text" name="barcode" id="barcode" class="form-control" placeholder="Barcode">	
+                                            <input type="text" name="barcode" id="barcode"  value="{{ $product->barcode }}" class="form-control" placeholder="Barcode">	
                                         </div>
                                     </div>   
                                     <div class="col-md-12">
                                         <div class="mb-3">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="hidden" name="track_qty" value="No">
-                                                <input class="custom-control-input" type="checkbox" id="track_qty" value="Yes" name="track_qty" checked>
+                                                <input class="custom-control-input" type="checkbox" id="track_qty" value="Yes" name="track_qty"  @if($product->track_qty == 'Yes') checked @endif>
                                                 <label for="track_qty" class="custom-control-label">Track Quantity</label>
                                                 <p class="custom_error"></p>
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="number" min="0" name="qty" id="qty" class="form-control" placeholder="Qty">	
+                                            <input type="number" min="0" name="qty"  value="{{ $product->qty }}" id="qty" class="form-control" placeholder="Qty">	
                                             <p class="custom_error"></p>
                                         </div>
                                     </div>                                         
@@ -127,8 +127,8 @@
                                 <h2 class="h4 mb-3">Product status</h2>
                                 <div class="mb-3">
                                     <select name="status" id="status" class="form-control">
-                                        <option value="1">Active</option>
-                                        <option value="0">Block</option>
+                                        <option value="1" @if($product->status == 1) selected @endif >Active</option>
+                                        <option value="0"  @if($product->status == 0) selected @endif>Block</option>
                                     </select>
                                 </div>
                             </div>
@@ -141,7 +141,7 @@
                                     <select name="category" id="category" class="form-control">
                                         <option value="">Select Category</option>
                                         @foreach ($categories as $category )
-                                            <option value="{{  $category->id }}">{{ $category->name }}</option>
+                                            <option @if($product->category_id ==  $category->id) selected @endif value="{{  $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -150,7 +150,7 @@
                                     <select name="sub_category" id="sub_category" class="form-control">
                                         <option value="">Select Sub-category</option>
                                         @foreach ($sub_categories as $sub_category )
-                                            <option value="{{  $sub_category->id }}">{{ $sub_category->name }}</option>
+                                            <option @if($product->sub_category_id == $sub_category->id) selected @endif value="{{  $sub_category->id }}">{{ $sub_category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -163,7 +163,7 @@
                                     <select name="brand" id="brand" class="form-control">
                                         <option value="">Select Brand</option>
                                         @foreach ($brands as $brand )
-                                            <option value="{{  $brand->id }}">{{ $brand->name }}</option>
+                                            <option @if($product->brand_id == $brand->id) selected @endif value="{{  $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -174,8 +174,8 @@
                                 <h2 class="h4 mb-3">Featured product</h2>
                                 <div class="mb-3">
                                     <select name="is_featured" id="is_featured" class="form-control">
-                                        <option value="No">No</option>
-                                        <option value="Yes">Yes</option>                                                
+                                        <option value="No" @if($product->is_featured == 'No') selected @endif >No</option>
+                                        <option value="Yes"  @if($product->is_featured == 'Yes') selected @endif>Yes</option>                                                
                                     </select>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@
                 </div>
                 
                 <div class="pb-5 pt-3">
-                    <button class="btn btn-primary">Create</button>
+                    <button class="btn btn-primary">Update</button>
                     <a href="products.html" class="btn btn-outline-dark ml-3">Cancel</a>
                 </div>
             </div>
@@ -254,7 +254,7 @@
         $("button[type='submit']").prop("disabled", true);
         $("input[type='text'],input[type='number'], select").removeClass('is-invalid');
         $.ajax({
-            url: '{{ route("products.store") }}',
+            url: '{{ route("products.update", $product->id) }}',
             type: 'post',
             data: formArray,
             dataType: 'json',
