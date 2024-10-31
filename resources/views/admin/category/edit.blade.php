@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="slug">Slug</label>
-                                <input type="text" readonly name="slug" id="slug" value="{{ $category->slug }}" class="form-control" placeholder="Slug">
+                                <input type="text"  name="slug" id="slug" value="{{ $category->slug }}" class="form-control" placeholder="Slug">
                                 <p></p>	
                             </div>
                         </div>
@@ -45,6 +45,15 @@
                                 <select name="status" id="status"  class="form-control">
                                     <option value="1" @if( $category->status == 1) selected @endif>Active</option>
                                     <option value="0"  @if( $category->status == 0) selected @endif>In-Active</option>
+                                </select>	
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email">Is Show on Home Page</label>
+                                <select name="show_on_home_page" id="show_on_home_page"  class="form-control">
+                                    <option value="No" @if( $category->show_on_home_page == 'No') selected @endif>No</option>
+                                    <option value="Yes" @if( $category->show_on_home_page == 'Yes') selected @endif>Yes</option>
                                 </select>	
                             </div>
                         </div>

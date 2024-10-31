@@ -49,7 +49,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="slug">Slug</label>
-                                <input type="text" value="{{ $sub_category->slug }}" readonly name="slug" id="slug" class="form-control" placeholder="Slug">
+                                <input type="text" value="{{ $sub_category->slug }}"  name="slug" id="slug" class="form-control" placeholder="Slug">
                                 <p></p>	
                             </div>
                         </div>
@@ -62,7 +62,15 @@
                                 </select>	
                             </div>
                         </div>
-                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email">Is Show on Home Page</label>
+                                <select name="show_on_home_page" id="show_on_home_page"  class="form-control">
+                                    <option value="No" @if( $sub_category->show_on_home_page == 'No') selected @endif>No</option>
+                                    <option value="Yes" @if( $sub_category->show_on_home_page == 'Yes') selected @endif>Yes</option>
+                                </select>	
+                            </div>
+                        </div>
                     </div>
                 </div>							
             </div>

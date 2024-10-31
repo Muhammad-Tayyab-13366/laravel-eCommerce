@@ -61,7 +61,19 @@
                         </div>
                         
                         <div id="product-gallery" class="d-flex">
-                                                                                                 
+                                @if (!empty($product_images))
+                                    @foreach ($product_images as $product_image)
+                                        <div class="col-md-3" id="dimg_{{ $product_image->id }}">
+                                            <input type="hidden" name="image_array[]" value="{{ $product_image->id }}">
+                                            <div class="card" style=""> 
+                                                <img class="card-img-top" src="{{ asset('storage/images/products/small/'.$product_image->image) }}" alt="Card image cap">
+                                                <div class="card-body pt-2">
+                                                    <a href="javascript:void(0);" class="btn btn-danger" onclick=deleteImage({{ $product_image->id }})>Delete</a>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    @endforeach
+                                @endif                                                               
                         </div>
                         <div class="card mb-3">
                             <div class="card-body">
@@ -312,6 +324,10 @@
         url: "{{ route('products.images.save')}}",
         maxFiles: 10,
         paramName: 'image',
+        params: {
+            isEdit: 1, // Example of an extra parameter
+            product_id : "{{ $product->id }}"
+        },
         addRemoveLinks: true,
         acceptedFiles: 'image/jpeg,image/png,image/gif',
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -323,9 +339,9 @@
                 var html = `
                     <div class="col-md-3" id="dimg_${response.id}">
                         <input type="hidden" name="image_array[]" value="${response.id}">
-                        <div class="card" style="">
+                        <div class="card pt-0" style="" >
                             <img class="card-img-top" src="${img_path_full}" alt="Card image cap">
-                            <div class="card-body">
+                            <div class="card-body pt-2">
                                 <a href="javascript:void(0);" class="btn btn-danger" onclick=deleteImage(${response.id})>Delete</a>
                             </div>
                         </div>
@@ -340,7 +356,24 @@
     });
   
     function deleteImage(id){
-        $("#dimg_"+id).remove();
+
+        $.ajax({
+            url: '{{ route("products.images.delete") }}',
+            type: 'post',
+            data: { id: id },
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            success: function(response){
+                if(response.status == true){
+                    $("#dimg_"+id).remove();
+                }else {
+                    alert(response.message);
+                }
+            },
+            error: function(){
+
+            }
+        })
     }
 
 

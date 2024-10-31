@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
+use Intervention\Image\Laravel\Facades\Image;
 
 class CategoryController extends Controller
 {
@@ -41,14 +42,23 @@ class CategoryController extends Controller
             $path = '';
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $newFileName =   $request->slug.'.'.$image->getClientOriginalExtension();
+                $newFileName =   $request->slug.date('Y_m_d_h_i_s').'.'.$image->getClientOriginalExtension();
                 $path  = $image->storeAs('images/categories', $newFileName, 'public'); // Store in 'storage/app/public/images
+
+                $sourcePath = storage_path('/app/public/images/categories/'. $newFileName);
+                $destinationPathLarge = storage_path('/app/public/images/categories/'. $newFileName);
+                $image = Image::read($sourcePath);
+                // Resize image
+                $image->resize(300, 300,function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($destinationPathLarge);
             }
 
             $category = new Category;
             $category->name = $request->name;
             $category->slug = $request->slug;
             $category->status = $request->status;
+            $category->show_on_home_page = $request->show_on_home_page;
             $category->image  = $path;
             $category->save();
         
@@ -102,14 +112,27 @@ class CategoryController extends Controller
 
             if($request->hasFile('image')){
                 $image = $request->file('image');
-                $newFileName = $request->slug.".".$image->getClientOriginalExtension();
-                $path = $image->storeAs('images/categories', $newFileName, 'public');
+                //$newFileName = $request->slug.".".$image->getClientOriginalExtension();
+                //$path = $image->storeAs('images/categories', $newFileName, 'public');
+                $newFileName =   $request->slug.date('Y_m_d_h_i_s').'.'.$image->getClientOriginalExtension();
+                $path = $image->storeAs('images/categories', $newFileName, 'public'); // Store in 'storage/app/public/images
+
+                $sourcePath = storage_path('/app/public/images/categories/'. $newFileName);
+                $destinationPathLarge = storage_path('/app/public/images/categories/'. $newFileName);
+                $image = Image::read($sourcePath);
+                // Resize image
+                $image->resize(300, 300,function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($destinationPathLarge);
+
+
                 $category->image = $path;
             }
 
             $category->name = $request->name;
             $category->slug = $request->slug;
             $category->status = $request->status;
+            $category->show_on_home_page = $request->show_on_home_page;
             $category->save();
 
             $request->session()->flash('success', 'Category updated successfully');

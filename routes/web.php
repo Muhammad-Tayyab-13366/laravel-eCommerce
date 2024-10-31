@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\FrontController;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -22,9 +23,7 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontController::class, 'index']);
 
 
 
@@ -65,7 +64,9 @@ Route::group(['prefix' => 'admin'], function(){
        Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
        Route::post('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+       Route::delete('/products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy');
        Route::post('/prducts/image', [ProductController::class, 'product_image_store'])->name('products.images.save');
+       Route::post('/prducts/image/delete', [ProductController::class, 'product_image_delete'])->name('products.images.delete');
     });
 
 });
