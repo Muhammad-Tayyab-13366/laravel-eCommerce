@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\ShopController;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,6 +25,7 @@ use Illuminate\Support\Str;
 */
 
 Route::get('/', [FrontController::class, 'index']);
+Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 
 
 
