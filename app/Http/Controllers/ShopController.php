@@ -58,15 +58,10 @@ class ShopController extends Controller
             }else{
                 $products = $products->orderBy('id', 'DESC');
             }
+        }else{
+            $products = $products->orderBy('id', 'DESC');
         }
-
-
-
-
-        $products =  $products->orderBy('id', 'DESC')
-                        ->with('product_images')
-                        ->take(8)
-                        ->get();
+        $products =  $products->with('product_images')->paginate(6);
         $data['products']   = $products;
         $data['price_min'] = intval($request->get('price_min'));
         $data['price_max'] = intval($request->get('price_max'));
@@ -75,5 +70,15 @@ class ShopController extends Controller
         $data['subCategorySelected'] = $subCategorySelected;
         $data['sort'] = $request->get('sort');
         return view('front.shop', $data);
+    }
+
+    public function product($slug){
+    
+        $product = Product::where('slug', $slug)->with('product_images')->first();
+        if($product == null){
+            abort(404);
+        }
+        
+        return view('front.product');
     }
 }
