@@ -28,7 +28,7 @@
                                     <div class="accordion-item">
                                         @if ($category->sub_categories->isNotEmpty())
                                             <h2 class="accordion-header" id="headingOne">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ 'category_'.$category->id }}" aria-expanded="false" aria-controls="collapseOne">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ $category->slug.'_'.$category->id }}" aria-expanded="false" aria-controls="collapseOne">
                                                     {{ $category->name }}
                                                 </button>
                                             </h2>
@@ -36,7 +36,7 @@
                                             <a href="{{route('front.shop', $category->slug) }}" class="nav-item nav-link {{ ($categorySelected == $category->id) ? 'text-primary' : '' }} ">{{ $category->name }}</a>
                                         @endif
                                         @if ($category->sub_categories->isNotEmpty())
-                                            <div id="{{ 'category_'.$category->id }}" class="accordion-collapse collapse {{ ($categorySelected == $category->id) ? 'show' : '' }}" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+                                            <div id="{{ $category->slug.'_'.$category->id }}" class="accordion-collapse collapse {{ ($categorySelected == $category->id) ? 'show' : '' }}" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
                                                 <div class="accordion-body">
                                                     <div class="navbar-nav">
                                                         @foreach ($category->sub_categories as $sub_category)
@@ -117,11 +117,7 @@
                             <div class="col-md-4">
                                 <div class="card product-card">
                                     <div class="product-image position-relative">
-                                        <a href="" class="product-img">
-                                            @if(!empty($f_prduct_image))
-                                                <img class="card-img-top" src="{{ asset('storage/images/products/small/'.$f_prduct_image->image) }}" alt="">
-                                            @endif
-                                        </a>
+                                        <a href="" class="product-img"><img class="card-img-top" src="{{ asset('storage/images/products/small/'.$f_prduct_image->image) }}" alt=""></a>
                                         <a class="whishlist" href="222"><i class="far fa-heart"></i></a>                            
 
                                         <div class="product-action">
@@ -143,6 +139,15 @@
                             </div> 
                         @endforeach
                     @endif 
+                    
+                      
+
+                      
+
+                     
+
+                      
+
                     <div class="col-md-12 pt-5">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
