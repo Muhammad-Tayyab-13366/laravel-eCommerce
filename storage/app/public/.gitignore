@@ -1,3 +1,8 @@
 *
 !.gitignore
+# Do not ignore the images directory
 !images/
+
+# Optionally, you may want to also un-ignore the files inside the images directory
+# This is necessary to ensure that files inside the images folder are tracked
+!images/*
