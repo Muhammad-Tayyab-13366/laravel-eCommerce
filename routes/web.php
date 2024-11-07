@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
 use App\Models\SubCategory;
@@ -24,10 +25,13 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/', [FrontController::class, 'index']);
+Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
 
+//Cart
+Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
+Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 
 Route::group(['prefix' => 'admin'], function(){
 
@@ -69,6 +73,7 @@ Route::group(['prefix' => 'admin'], function(){
        Route::delete('/products/{product}/delete', [ProductController::class, 'destroy'])->name('products.destroy');
        Route::post('/prducts/image', [ProductController::class, 'product_image_store'])->name('products.images.save');
        Route::post('/prducts/image/delete', [ProductController::class, 'product_image_delete'])->name('products.images.delete');
+       Route::get('/get-products', [ProductController::class, 'getProducts'])->name('product.getProducts');
     });
 
 });

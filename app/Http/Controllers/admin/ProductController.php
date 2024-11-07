@@ -10,6 +10,7 @@ use App\Models\ProductImage;
 use App\Models\SubCategory;
 use App\Models\TempImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Laravel\Facades\Image;
 
@@ -59,6 +60,9 @@ class ProductController extends Controller
             $product->title = $request->title;
             $product->slug  = $request->slug;
             $product->description = $request->description;
+            $product->short_description = $request->short_description;
+            $product->shipping_returns = $request->shipping_returns;
+            $product->related_products = (!empty($request->related_products)) ? implode(',', $request->related_products) :'' ;
             $product->price = $request->price;
             $product->compare_price = $request->compare_price;
             $product->sku = $request->title;
@@ -198,7 +202,7 @@ class ProductController extends Controller
     }
 
     public function edit($id, Request $request){
-        
+       
         $product = Product::with('product_images')->find($id);
        
         if(!empty($product)){
@@ -208,6 +212,14 @@ class ProductController extends Controller
             $data['sub_categories'] = SubCategory::orderBy('name', 'ASC')->get();
             $data['brands'] = Brand::orderBy('name', 'ASC')->get();
             $data['product_images'] = $product->product_images;
+         
+            $relatedProducts = [];
+            if( $product->related_products !=''){
+                $productArray = explode(',', $product->related_products);
+                $relatedProducts = Product::whereIn('id', $productArray)->get();
+            }
+            
+            $data['relatedProducts'] = $relatedProducts;
             return view('admin.products.edit',$data);
         }else {
             return redirect()->route('products.index')->with('error', 'Product not found');
@@ -238,6 +250,9 @@ class ProductController extends Controller
                 $product->title = $request->title;
                 $product->slug  = $request->slug;
                 $product->description = $request->description;
+                $product->short_description = $request->short_description;
+                $product->shipping_returns = $request->shipping_returns;
+                $product->related_products = (!empty($request->related_products)) ? implode(',', $request->related_products) :'' ;
                 $product->price = $request->price;
                 $product->compare_price = $request->compare_price;
                 $product->sku = $request->title;
@@ -340,6 +355,27 @@ class ProductController extends Controller
                 "message" => 'product not found'
             ]);
         }
+    }
+
+    public function getProducts(Request $request){
+
+        $products = '';
+        $tempProduct = [];
+        if( $request->term != ''){
+            $products = Product::where('title', 'like', '%'.$request->term.'%')->get();
+       
+
+            if(!$products->isEmpty()){
+                foreach($products as $product){
+                    $tempProduct[] = array('id' => $product->id, 'text' => $product->title);
+                }
+            }
+        }
+
+        return response()->json([
+            "status" => true,
+            "tags" => $tempProduct
+        ]);
     }
 }
 // php artisan make:migration change_description_to_text_in_products_table --table=products
