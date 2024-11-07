@@ -16,7 +16,17 @@
 <section class=" section-9 pt-4">
     <div class="container">
         <div class="row">
+            
+           
             <div class="col-md-8">
+                @if(session('success'))
+                    <div class="alert alert-success" role="alert">{{ session('success') }}</div>
+                @endif
+                
+                
+                @if(session('error'))
+                    <div class="alert alert-danger" role="alert"> {{ session('error') }} </div>
+                @endif
                 <div class="table-responsive">
                     <table class="table" id="cart">
                         <thead>
@@ -30,7 +40,7 @@
                         </thead>
                         <tbody>
 
-                            @if (!empty($cartContent))
+                            @if (!empty($cartContent)) 
                                 @foreach ($cartContent as $item)
                                     <tr>
                                         <td>
@@ -45,13 +55,13 @@
                                         <td>
                                             <div class="input-group quantity mx-auto" style="width: 100px;">
                                                 <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1">
+                                                    <button class="btn btn-sm btn-dark btn-minus p-2 pt-1 pb-1 sub" data-id="{{ $item->rowId }}" >
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
                                                 <input type="text" class="form-control form-control-sm  border-0 text-center" value="{{ $item->qty }}">
                                                 <div class="input-group-btn">
-                                                    <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1">
+                                                    <button class="btn btn-sm btn-dark btn-plus p-2 pt-1 pb-1 add"  data-id="{{ $item->rowId }}" >
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
@@ -61,10 +71,15 @@
                                            {{ $item->price * $item->qty }}
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteCartItem('{{ $item->rowId }}')"><i class="fa fa-times"></i></button>
                                         </td>
                                     </tr>
                                 @endforeach
+                            @endif 
+                            @if(Cart::count() == 0)
+                                <tr>
+                                    <td class="text-start " colspan="5">Cart is empty</td>
+                                </tr>
                             @endif                          
                         </tbody>
                     </table>
@@ -104,4 +119,70 @@
 @endsection
 
 @section('customejs')
+
+    <script>
+        $('.add').click(function(){
+            qty = 0;
+            var qtyElement = $(this).parent().prev(); // Qty Input
+            var qtyValue = parseInt(qtyElement.val());
+            if (qtyValue < 10) {
+                qty = qtyValue+1;
+                qtyElement.val(qty);
+            }  
+            var rowId = $(this).data('id');
+            if(qty != 0){
+                updateCart(rowId, qty);
+            }
+        });
+
+        $('.sub').click(function(){
+            qty = 0;
+            var qtyElement = $(this).parent().next(); 
+            var qtyValue = parseInt(qtyElement.val());
+            if (qtyValue > 1) {
+                qty = qtyValue-1;
+                qtyElement.val(qty);
+            }  
+            var rowId = $(this).data('id');
+            if(qty != 0){
+                updateCart(rowId, qty);
+            }
+        });
+
+        function updateCart(rowId, qty){
+            $.ajax({
+                url: '{{ route("front.updateCart") }}',
+                type: 'post',
+                data: {rowId:rowId, qty:qty},
+                dataType: 'json',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function(response){
+                    
+                    window.location.href = "{{ route('front.cart') }}";
+                    
+                },
+                error: function(){
+
+                }
+            });
+        }
+
+        function deleteCartItem(rowId){
+            $.ajax({
+                url: '{{ route("front.deleteCartItem") }}',
+                type: 'post',
+                data: {rowId:rowId},
+                dataType: 'json',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                success: function(response){
+                    
+                    window.location.href = "{{ route('front.cart') }}";
+                    
+                },
+                error: function(){
+
+                }
+            });
+        }
+    </script>
 @endsection
