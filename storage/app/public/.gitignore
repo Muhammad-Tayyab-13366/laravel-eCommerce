@@ -1,5 +1,5 @@
 # Ignore everything in the public directory
-*
+
 
 # Do not ignore the images directory
 !images/
