@@ -1,0 +1,8 @@
+# Ignore everything in the public directory
+
+
+# Do not ignore the images directory
+!images/
+
+# Un-ignore everything inside images/ as well
+!images/*
