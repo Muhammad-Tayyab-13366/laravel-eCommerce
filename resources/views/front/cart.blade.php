@@ -68,7 +68,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                           {{ $item->price * $item->qty }}
+                                           Rs. {{ number_format($item->price * $item->qty) }}
                                         </td>
                                         <td>
                                             <button class="btn btn-sm btn-danger" onclick="deleteCartItem('{{ $item->rowId }}')"><i class="fa fa-times"></i></button>
@@ -104,7 +104,7 @@
                             <div>Rs. {{ Cart::subtotal() }}</div>
                         </div>
                         <div class="pt-5">
-                            <a href="login.php" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
+                            <a href="{{ route('front.checkout') }}" class="btn-dark btn btn-block w-100">Proceed to Checkout</a>
                         </div>
                     </div>
                 </div>     

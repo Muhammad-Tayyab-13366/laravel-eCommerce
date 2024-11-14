@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
@@ -34,6 +35,29 @@ Route::get('/cart', [CartController::class, 'cart'])->name('front.cart');
 Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('front.addToCart');
 Route::post('/update-cart', [CartController::class, 'updateCart'])->name('front.updateCart');
 Route::post('/delete-cart-item', [CartController::class, 'deleteCartItem'])->name('front.deleteCartItem'); 
+Route::get('/checkout', [CartController::class, 'checkout'])->name('front.checkout');
+Route::post('/processCheckout', [CartController::class, 'processCheckout'])->name('front.processCheckout'); 
+Route::get('/thanks/{orderId}', [CartController::class, 'thankyou'])->name('front.thanks');
+
+Route::group(['prefix' => 'account'], function(){
+
+    Route::group(['middleware' => 'guest'], function(){
+        Route::get('/register', [AuthController::class, 'register'])->name('account.register');
+        Route::post('/process-register', [AuthController::class, 'processRegister'])->name('account.processRegister');
+        Route::get('/login', [AuthController::class, 'login'])->name('account.login');
+        Route::post('/process-login', [AuthController::class, 'processLogin'])->name('account.processLogin');
+        
+
+    });
+
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/profile', [AuthController::class, 'profile'])->name('account.profile');
+        Route::get('/logout', [AuthController::class, 'logout'])->name('account.logout');
+        Route::get('/orders', [AuthController::class, 'orders'])->name('account.orders');
+        Route::get('/order/{orderId}', [AuthController::class, 'orderDetail'])->name('account.orderDetail');
+       
+    });
+});
 Route::group(['prefix' => 'admin'], function(){
 
    // Route::group(['middleware' => 'admin.guest'], function(){
