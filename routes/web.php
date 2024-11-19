@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\CategoryController;
 use App\Http\Controllers\admin\SubCategoryController;
 use App\Http\Controllers\admin\BrandController;
+use App\Http\Controllers\admin\OrderController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
@@ -99,6 +100,9 @@ Route::group(['prefix' => 'admin'], function(){
        Route::post('/prducts/image', [ProductController::class, 'product_image_store'])->name('products.images.save');
        Route::post('/prducts/image/delete', [ProductController::class, 'product_image_delete'])->name('products.images.delete');
        Route::get('/get-products', [ProductController::class, 'getProducts'])->name('product.getProducts');
+
+       Route::get('/orders', [OrderController::class, 'index'])->name('admin-order.list');
+       Route::get('/order/{orderId}', [OrderController::class, 'detail'])->name('admin-order.detail');
     });
 
 });

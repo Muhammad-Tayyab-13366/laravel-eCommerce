@@ -102,7 +102,7 @@ class AuthController extends Controller
     }
 
     public function orderDetail($id){
-        echo "<pre>"; print_r(session()->all());
+      
         $user = Auth::user();
         $user_id = $user->id;
         $data['order'] = Order::where('user_id', $user_id)

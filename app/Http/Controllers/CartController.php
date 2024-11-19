@@ -182,6 +182,7 @@ class CartController extends Controller
             "country" => "required",
             "address" => "required",
             "city" => "required",
+            "state" => "required",
             "zip" => "required",
             "mobile" => "required"
 
@@ -248,6 +249,7 @@ class CartController extends Controller
                     $order_items->save();
                 }
                 session()->flash('success', 'Order saved successfully');
+                Cart::destroy();
                 return response()->json([
                     'status' => true,
                     'message' => 'Order saved successfully',
