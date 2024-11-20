@@ -14,6 +14,7 @@ use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ShopController;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 /*
@@ -26,7 +27,9 @@ use Illuminate\Support\Str;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/test', function(){
+    sendOrderEmail(7);
+});
 Route::get('/', [FrontController::class, 'index'])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, 'index'])->name('front.shop');
 Route::get('/product/{slug}', [ShopController::class, 'product'])->name('front.product');
@@ -103,6 +106,8 @@ Route::group(['prefix' => 'admin'], function(){
 
        Route::get('/orders', [OrderController::class, 'index'])->name('admin-order.list');
        Route::get('/order/{orderId}', [OrderController::class, 'detail'])->name('admin-order.detail');
+       Route::post('/order/change-status', [OrderController::class, 'changeStatus'])->name('admin-order.changeStatus');
+
     });
 
 });

@@ -8,7 +8,7 @@
                 <h1>Order: #{{ $order->id }}</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="orders.html" class="btn btn-primary">Back</a>
+                <a href="{{ route('admin-order.list') }}" class="btn btn-primary">Back</a>
             </div>
         </div>
     </div>
@@ -18,6 +18,7 @@
 <section class="content">
     <!-- Default box -->
     <div class="container-fluid">
+        @include('admin.message')
         <div class="row">
             <div class="col-md-9">
                 <div class="card">
@@ -33,9 +34,6 @@
                                 Phone: {{ $order->phone }}<br>
                             </address>
                             </div>
-                            
-                            
-                            
                             <div class="col-sm-4 invoice-col">
                                 <b>Invoice #007612</b><br>
                                 <br>
@@ -98,14 +96,14 @@
                         <h2 class="h4 mb-3">Order Status</h2>
                         <div class="mb-3">
                             <select name="status" id="status" class="form-control">
-                                <option value="">Pending</option>
-                                <option value="">Shipped</option>
-                                <option value="">Delivered</option>
-                                <option value="">Cancelled</option>
+                                <option value="Pending" @if($order->status == 'Pending') selected @endif >Pending</option>
+                                <option value="Shipped" @if($order->status == 'Shipped') selected @endif>Shipped</option>
+                                <option value="Delivered" @if($order->status == 'Delivered') selected @endif>Delivered</option>
+                                <option value="Cancelled" @if($order->status == 'Cancelled') selected @endif>Cancelled</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary">Update</button>
+                            <button class="btn btn-primary" id="btn_update_status">Update</button>
                         </div>
                     </div>
                 </div>
@@ -129,4 +127,27 @@
     <!-- /.card -->
 </section>
 <!-- /.content -->
+@endsection
+
+@section('customejs')
+<script>
+    $("#btn_update_status").on('click', function(){
+        status = $("#status").val();
+            $.ajax({
+                url : ' {{ route("admin-order.changeStatus") }}',
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                type: 'post',
+                data: { "id" : "{{ $orderId }}", "status" : status },
+                dataType: 'json',
+                success: function(response){
+                    window.location.href = "{{ route('admin-order.detail',  $orderId) }}";
+                    
+                },
+                error: function(jqXHR, exception){
+
+                }
+            });
+        });
+</script>
+
 @endsection

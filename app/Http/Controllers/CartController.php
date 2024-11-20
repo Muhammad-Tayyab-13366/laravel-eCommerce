@@ -250,6 +250,8 @@ class CartController extends Controller
                 }
                 session()->flash('success', 'Order saved successfully');
                 Cart::destroy();
+
+                sendOrderEmail($order->id);
                 return response()->json([
                     'status' => true,
                     'message' => 'Order saved successfully',

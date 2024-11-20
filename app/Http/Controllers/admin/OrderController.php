@@ -30,11 +30,26 @@ class OrderController extends Controller
                 ->leftJoin('countries as c', 'c.id', 'orders.country_id')
                 ->with('order_items')
                 ->first();
+        $data['orderId'] = $id;
         if($data['order'] == null){
         
         }
+        return view('admin.order.detail', $data);
+    }
+
+    public function changeStatus(Request $request){
        
 
-        return view('admin.order.detail', $data);
+        $orderId = $request->id;
+        $status  = $request->status;
+        $order = Order::find($orderId);
+        $order->status =  $status;
+        
+        $order->save();
+        session()->flash('success', 'Order status updated successfully');
+        return response()->json([
+            'status' => true,
+            'message' => 'Status changed successfully'
+        ]);
     }
 }
