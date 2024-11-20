@@ -111,13 +111,13 @@
                     <div class="card-body">
                         <h2 class="h4 mb-3">Send Inovice Email</h2>
                         <div class="mb-3">
-                            <select name="status" id="status" class="form-control">
-                                <option value="">Customer</option>                                                
-                                <option value="">Admin</option>
+                            <select name="sel_invoice_user" id="sel_invoice_user" class="form-control">
+                                <option value="customer">Customer</option>                                                
+                                <option value="admin">Admin</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <button class="btn btn-primary">Send</button>
+                            <button class="btn btn-primary" id="btn_send_invoice">Send</button>
                         </div>
                     </div>
                 </div>
@@ -148,6 +148,23 @@
                 }
             });
         });
+
+    $("#btn_send_invoice").on('click', function(){
+        invoice_user = $("#sel_invoice_user").val();
+        $.ajax({
+            url : ' {{ route("admin-order.sendEmail") }}',
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            type: 'post',
+            data: { "id" : "{{ $orderId }}", "invoice_user" : invoice_user },
+            dataType: 'json',
+            success: function(response){
+        
+            },
+            error: function(jqXHR, exception){
+
+            }
+        });
+    });
 </script>
 
 @endsection

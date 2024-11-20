@@ -7,8 +7,14 @@
 </head>
 <body>
     
-    <h1>Thanks for your order</h1>
-    <h2>Your order id is #{{ $mailData['order']->id }}</h2>
+    @if ($mailData['order']->user == 'customer')
+        <h1>Thanks for your order</h1>
+        <h2>Your order id is #{{ $mailData['order']->id }}</h2>
+    @else
+        <h1>You have received an order</h1>
+        <h2>Order id is #{{ $mailData['order']->id }}</h2>
+    @endif
+
 
     <h2>Products</h2>
     <table class="table table-striped">
