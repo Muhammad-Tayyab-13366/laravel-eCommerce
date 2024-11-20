@@ -107,6 +107,8 @@ Route::group(['prefix' => 'admin'], function(){
        Route::get('/orders', [OrderController::class, 'index'])->name('admin-order.list');
        Route::get('/order/{orderId}', [OrderController::class, 'detail'])->name('admin-order.detail');
        Route::post('/order/change-status', [OrderController::class, 'changeStatus'])->name('admin-order.changeStatus');
+       Route::post('/order/send-invoice-email', [OrderController::class, 'sendInvoiceEmail'])->name('admin-order.sendEmail');
+       
 
     });
 

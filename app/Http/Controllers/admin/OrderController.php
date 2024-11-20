@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderEmail;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -51,5 +54,11 @@ class OrderController extends Controller
             'status' => true,
             'message' => 'Status changed successfully'
         ]);
+    }
+
+    public function sendInvoiceEmail(Request $request){
+        $id = $request->id;
+        $invoice_user =  $request->invoice_user;
+        sendOrderEmail($id, $user=$invoice_user);
     }
 }

@@ -247,6 +247,8 @@ class CartController extends Controller
                     $order_items->price = $item->price;
                     $order_items->total = $item->price * $item->qty;
                     $order_items->save();
+
+                   
                 }
                 session()->flash('success', 'Order saved successfully');
                 Cart::destroy();

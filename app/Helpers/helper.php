@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 function getCategories(){
@@ -30,13 +31,22 @@ function getProductSlug($id){
     return Product::where('id', $id)->first();
 }
 
-function sendOrderEmail($orderId){
+function sendOrderEmail($orderId, $user='customer'){
     $order = Order::where('id', $orderId)->with('order_items')->first();
+    $subject = 'Thanks for your order';
+    if( $user == 'admin'){
+        $subject = 'You have received order';
+    }
     $mailData = [
-        "subject" => 'Thanks for your order',
-        "order" => $order
+        "subject" => $subject,
+        "order" => $order,
+        'user' => $user
     ];
-    Mail::to($order->email)->send(new OrderEmail($mailData));
+    $user_email = $order->email;
+    if($user == 'admin'){
+        $user_email = Auth::user()->email;
+    }
+    Mail::to($user_email)->send(new OrderEmail($mailData));
 }
 
 ?>
