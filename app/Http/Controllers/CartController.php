@@ -247,8 +247,13 @@ class CartController extends Controller
                     $order_items->price = $item->price;
                     $order_items->total = $item->price * $item->qty;
                     $order_items->save();
-
-                   
+                    
+                    // update stock product
+                    $productData = Product::find($item->id);
+                    $current_qty = $productData->qty;
+                    $updated_qty = $current_qty - $item->qty;
+                    $productData->qty = $updated_qty;
+                    $productData->save();
                 }
                 session()->flash('success', 'Order saved successfully');
                 Cart::destroy();
