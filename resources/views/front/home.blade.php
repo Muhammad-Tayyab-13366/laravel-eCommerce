@@ -105,11 +105,11 @@
                     <div class="col-lg-3">
                         <div class="cat-card">
                             <div class="left">
-                                <img src="{{ asset('storage/'. $category->image ) }}" alt="" class="img-fluid">
+                               <a class="a_black" href="{{ route('front.shop', ['categorySlug' => $category->slug])}}"> <img src="{{ asset('storage/'. $category->image ) }}" alt="" class="img-fluid"></a>
                             </div>
                             <div class="right">
                                 <div class="cat-data">
-                                    <h2>{{ $category->name }}</h2>
+                                    <h2> <a class="a_black"  href="{{ route('front.shop', ['categorySlug' => $category->slug])}}"> {{ $category->name }}</a></h2>
                                     <!-- <p>100 Products</p> -->
                                 </div>
                             </div>

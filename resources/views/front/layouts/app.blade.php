@@ -43,6 +43,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Fav Icon -->
         <link rel="shortcut icon" type="image/x-icon" href="#" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('front-assets/css/custom.css') }}" />
     </head>
     <body data-instant-intensity="mousedown">
 
