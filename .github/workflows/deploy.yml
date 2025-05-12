@@ -1,0 +1,37 @@
+name: Laravel CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # This triggers the workflow when a push to the 'main' branch occurs
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.2
+        extensions: mbstring, bcmath, xml, curl, mysql, zip
+
+    - name: Install Composer dependencies
+      run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /var/www/html/laravel-eCommerce
+          git pull origin main
+          composer install --no-dev
+          php artisan migrate --force
+          php artisan config:cache
+          php artisan route:cache
